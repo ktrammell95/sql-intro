@@ -133,7 +133,11 @@ Time: 0.004s
 SELECT 10
 Time: 0.010s
 
+
+
+
 -- ===========================================================================================================================
+-- Foreign Keys - The SQL
 -- ===========================================================================================================================
 
 -- In your CompanyDatabase, add a table named Departments with the following columns:
@@ -290,9 +294,46 @@ UPDATE "ProductOrders" set "OrderQuantity" = '2' where "ProductId" = 2;
 +------------------+---------------+---------+-----------------+
 
 -- Given a building, return all employees that work in that building. 
--- Show this query for buildings named North Side, East Side, and finally a building that you actually have in your data 
--- even if your data doesn't have any departments in those buildings. NOTE this means you can't manually look up Ids and use them, you have to let SQL do that work. (Hint: JOIN)
+-- Show this query for buildings named North Side, East Side, and finally a building that you actually have in your data even if your data doesn't have any departments in those buildings. 
+-- NOTE this means you can't manually look up Ids and use them, you have to let SQL do that work. (Hint: JOIN)
 
+SELECT "Employees"."FullName", "Departments"."Building", "Departments"."DepartmentName"
+FROM "Departments"
+JOIN "Employees" ON "Employees"."DepartmentId" = "Departments"."DepartmentId"
+WHERE "Departments"."Building" = ('North Side') OR "Departments"."Building" = ('East Side') OR "Departments"."Building" = ('Main');
 
++----------------+------------+------------------+
+| FullName       | Building   | DepartmentName   |
+|----------------+------------+------------------|
+| Tim Smith      | Main       | Development      |
+| Barbara Ramsey | Main       | Development      |
++----------------+------------+------------------+
 
 -- Find all orders that contain the product id of 2
+
+SELECT "Orders"."OrderNumber","Products"."Name", "ProductOrders"."OrderQuantity"
+FROM "Orders"
+JOIN "ProductOrders" ON "ProductOrders"."OrderId" = "Orders"."OrderId"
+JOIN "Products" ON "Products"."ProductId" = "ProductOrders"."ProductId"
+WHERE "ProductOrders"."ProductId" = ('2');
+
++---------------+---------+-----------------+
+| OrderNumber   | Name    | OrderQuantity   |
+|---------------+---------+-----------------|
+| X529          | Flowbee | 2               |
++---------------+---------+-----------------+
+ 
+-- Find the quantity of the Flowbee product from order with order number X529. You may not write the value of an Id in your query, let SQL do the work (HINT: JOIN)
+
+SELECT "Products"."Name", "ProductOrders"."OrderQuantity", "Orders"."OrderNumber"
+FROM "Orders"
+JOIN "ProductOrders" ON "ProductOrders"."OrderId" = "Orders"."OrderId"
+JOIN "Products" ON "Products"."ProductId" = "ProductOrders"."ProductId"
+WHERE "Products"."Name" = ('Flowbee') AND "Orders"."OrderNumber" = ('X529');
+
++---------+-----------------+---------------+
+| Name    | OrderQuantity   | OrderNumber   |
+|---------+-----------------+---------------|
+| Flowbee | 2               | X529          |
++---------+-----------------+---------------+
+
